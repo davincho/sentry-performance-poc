@@ -1,54 +1,27 @@
-import React from "react";
-
-import type { User } from "@prisma/client";
-import * as Sentry from "@sentry/react";
-import { Link, LoaderFunction, useLoaderData, json } from "remix";
-
-import { db } from "~/utils/db.server";
+import type { User } from '@prisma/client';
+import { LoaderFunction, useLoaderData } from 'remix';
 
 interface LoaderData {
   users: User[];
 }
 
+const ARTIFICAL_DELAY = 3000;
+
 export const loader: LoaderFunction = async () => {
-  const data: LoaderData = {
-    users: await db.user.findMany(),
-  };
-  return json(data);
+  return fetch(`http://localhost:3000/users?delay=${ARTIFICAL_DELAY}`);
 };
 
-function mySlowFunction(baseNumber: number) {
-  console.time("mySlowFunction");
-  let result = 0;
-  for (let i = Math.pow(baseNumber, 7); i >= 0; i--) {
-    result += Math.atan(i) * Math.tan(i);
-  }
-  console.timeEnd("mySlowFunction");
-}
-
 function Index() {
-  const data = useLoaderData<LoaderData>();
-  const [time, setTime] = React.useState(new Date().getTime());
+  const { users } = useLoaderData<LoaderData>();
 
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <button
-        onClick={() => {
-          const t: any = {};
-
-          mySlowFunction(10);
-
-          t.a.g();
-
-          setTime(new Date().getTime());
-        }}
-      >
-        Click Me! 💣 - {time}
-      </button>
-
-      <Link to="/pagea">PageA</Link>
+    <div>
+      <h2>Server side fetched data (delay: {ARTIFICAL_DELAY}ms):</h2>
+      <pre className="w-full h-full border-2 border-gray-300 p-2 mt-3">
+        {JSON.stringify(users, null, ' ')}
+      </pre>
     </div>
   );
 }
 
-export default Sentry.withProfiler(Index, { name: "Davncho" });
+export default Index;
