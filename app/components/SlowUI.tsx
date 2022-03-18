@@ -1,4 +1,4 @@
-import { useEffect, Profiler, useRef, useState } from 'react';
+import { useEffect, Profiler, useState } from 'react';
 
 import * as Sentry from '@sentry/react';
 import { useFetcher } from 'remix';
@@ -13,7 +13,11 @@ function mySlowFunction(baseNumber: number) {
 }
 
 const SlowBit = () => {
-  const ref = useState(() => mySlowFunction(10));
+  /* useEffect(() => {
+    mySlowFunction(10);
+  }, []);*/
+
+  useState(() => mySlowFunction(10));
 
   return null;
 };
@@ -21,12 +25,13 @@ const SlowBit = () => {
 const SlowUI = () => {
   const fetcher = useFetcher();
 
-  const [span] = useState(() => {
+  /* const [span] = useState(() => {
     return Sentry.getCurrentHub().getScope()?.getTransaction()?.startChild({
       description: 'slowUI - profiler',
       op: 'mount'
     });
-  });
+  });*/
+
   useEffect(() => {
     fetcher.load('/users');
   }, []);
@@ -37,7 +42,7 @@ const SlowUI = () => {
       onRender={(id, phase, duration) => {
         if (phase === 'mount') {
           console.log(duration);
-          span?.finish();
+          // span?.finish();
         }
       }}
     >

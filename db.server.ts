@@ -132,6 +132,7 @@ app.get('/users', async (req, res) => {
 });
 
 app.get('/users/:id', async (req, res) => {
+  delay = parseInt((req.query.delay as string) || '0', 10);
   const id = req.params.id;
 
   const users = await db.user.findFirst({

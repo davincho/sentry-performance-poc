@@ -1,36 +1,12 @@
-import { useEffect, useState } from 'react';
-
-import * as Sentry from '@sentry/react';
-
-const SlowButton = () => {
-  const [currentTraceId, setCurrentTraceId] = useState<string>('');
-
-  useEffect(() => {
-    const getTraceId = () => {
-      const tid = Sentry.getCurrentHub().getScope()?.getTransaction()?.traceId;
-
-      if (tid) {
-        setCurrentTraceId(tid);
-      }
-    };
-
-    const interval = setInterval(getTraceId, 1000);
-
-    getTraceId();
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [setCurrentTraceId]);
-
+const SlowButton: React.FC<{ traceId: string }> = ({ traceId, children }) => {
   return (
     <a
-      className="text-xs"
+      className="text-xs hover:underline"
       target="_blank"
-      href={`https://sentry.io/organizations/adverity-trial/performance/trace/${currentTraceId}/?`}
+      href={`https://sentry.io/organizations/adverity-trial/performance/trace/${traceId}/?`}
       rel="noreferrer"
     >
-      👉🏼 Sentry Trace: {currentTraceId}
+      {children}
     </a>
   );
 };

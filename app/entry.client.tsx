@@ -4,7 +4,7 @@ import { hydrate } from 'react-dom';
 import { RemixBrowser } from 'remix';
 
 Sentry.init({
-  debug: true,
+  // debug: true,
   dsn: 'https://737659f894eb40b489331ac7cbbaa41c@o1161094.ingest.sentry.io/6246156',
   integrations: [new BrowserTracing({})],
 

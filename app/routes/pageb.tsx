@@ -1,54 +1,60 @@
 import React from 'react';
 
-import { Link, LoaderFunction, json, useLoaderData } from 'remix';
+import * as Sentry from '@sentry/react';
+import { useFetcher } from 'remix';
+
+import Canvas from '~/components/Canvas';
+import SentryExample from '~/components/SentryExample';
 
 export default function PageB() {
   const fetcher = useFetcher();
 
   React.useEffect(() => {
-    fetcher.load('/users');
-  }, []);
+    if (fetcher.state === 'idle' && fetcher.type === 'done') {
+      Sentry.getCurrentHub().getScope()?.getTransaction()?.finish();
+    }
+  }, [fetcher.state, fetcher.type]);
+
+  const currentId = '70d64fdf-1fb1-432a-97cc-4c361d2e630e';
 
   return (
     <div>
-      <div className="flex justify-between">
-        <input
-          className="block flex-auto"
-          type="text"
-          defaultValue={currentId}
-          readOnly
-        />
+      <SentryExample
+        samples={[
+          {
+            label: 'Manual fetch',
+            traceId: 'efc5232bb6be422b80b9eca7dbd42fe7'
+          }
+        ]}
+      />
+      <Canvas>
         <button
-          className="bg-blue-200 p-2 rounded-lg hover:bg-blue-300 block flex-auto ml-3"
+          className="bg-blue-200 p-2 rounded-lg hover:bg-blue-300 block flex-auto"
           onClick={() => {
-            const url = `/users/${currentId}`;
+            const url = `/users/${currentId}?delay=1000`;
 
-            const transaction = new IdleTransaction(
-              {
-                name: 'fetch-user',
-                sampled: true
-              },
-              Sentry.getCurrentHub(),
-              10000
+            const transaction = Sentry.startTransaction({
+              name: 'network-request'
+            });
+
+            Sentry.getCurrentHub().configureScope(scope =>
+              scope.setSpan(transaction)
             );
 
-            transaction.initSpanRecorder();
-
-            // const transaction = Sentry.getCurrentHub().startTransaction({
-            //   name: "fetch-user",
-            // });
-
-            const span = transaction.startChild({ op: url });
+            const span = transaction.startChild({
+              data: { url },
+              op: 'fetch-user'
+            });
 
             fetcher.load(url);
 
-            span.finish(); // Remember that only finished spans will be sent with the transaction
+            span.setStatus('ok');
+            span.finish();
           }}
         >
           Fetch user
         </button>
-      </div>
-      <Link to="/">Back</Link>
+      </Canvas>
     </div>
   );
 }

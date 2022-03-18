@@ -1,9 +1,6 @@
-import React from 'react';
-
 import {
   LoaderFunction,
   MetaFunction,
-  useLoaderData,
   Links,
   LinksFunction,
   LiveReload,
@@ -13,7 +10,7 @@ import {
   ScrollRestoration
 } from 'remix';
 
-import SentryLink from '~/components/SentryLink';
+import SentrySpy from '~/components/SentrySpy';
 import StyledLink from '~/components/StyledLink';
 import styles from '~/output.css';
 
@@ -46,7 +43,7 @@ export default function App() {
       <body>
         <div className="container m-auto mt-11">
           <div className="text-right">
-            <SentryLink />
+            <SentrySpy />
           </div>
           <div className="my-4">
             <StyledLink to="/">Home</StyledLink>
