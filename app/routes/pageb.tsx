@@ -55,6 +55,12 @@ export default function PageB() {
           Fetch user
         </button>
       </Canvas>
+
+      {fetcher.data ? (
+        <pre className="w-full h-full border-2 border-gray-300 p-2 mt-3 border-dashed rounded-md">
+          {JSON.stringify(fetcher.data, null, ' ')}
+        </pre>
+      ) : null}
     </div>
   );
 }

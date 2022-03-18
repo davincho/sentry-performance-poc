@@ -3,10 +3,10 @@ import { useSearchParams } from 'remix';
 
 import Button from '~/components/Button';
 import Canvas from '~/components/Canvas';
+import Dashboard from '~/components/Dashboard';
 import SentryExample from '~/components/SentryExample';
-import SlowUI from '~/components/SlowUI';
 
-const SlowUIInstrumented = Sentry.withProfiler(SlowUI);
+const InstDashboard = Sentry.withProfiler(Dashboard);
 
 export default function PageA() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,7 +23,7 @@ export default function PageA() {
           },
           {
             label: 'Navigation',
-            traceId: '382811e9388c41db868771c917a0c233'
+            traceId: 'a8fbce49df09486e9efd2fd64ea8ada2'
           }
         ]}
       />
@@ -59,7 +59,7 @@ export default function PageA() {
             <h1 className="text-xl">No dashboard</h1>
           </div>
         ) : (
-          <SlowUIInstrumented />
+          <InstDashboard />
         )}
       </Canvas>
     </div>

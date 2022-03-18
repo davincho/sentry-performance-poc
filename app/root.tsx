@@ -47,8 +47,8 @@ export default function App() {
           </div>
           <div className="my-4">
             <StyledLink to="/">Home</StyledLink>
-            <StyledLink to="/pagea">PageA</StyledLink>
-            <StyledLink to="/pageb">PageB</StyledLink>
+            <StyledLink to="/pagea">Slow UI</StyledLink>
+            <StyledLink to="/pageb">Custom Tracing</StyledLink>
           </div>
 
           <Outlet />
