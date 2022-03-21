@@ -46,7 +46,7 @@ export default function App() {
             <SentrySpy />
           </div>
           <div className="my-4">
-            <StyledLink to="/">Home</StyledLink>
+            <StyledLink to="/">Slow SSR</StyledLink>
             <StyledLink to="/pagea">Slow UI</StyledLink>
             <StyledLink to="/pageb">Custom Tracing</StyledLink>
           </div>
